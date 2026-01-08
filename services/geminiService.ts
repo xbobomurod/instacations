@@ -2,8 +2,12 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { CaptionRequest, CaptionResponse, Language } from "../types";
 
+// Always use the named parameter `apiKey` and access `process.env.API_KEY` directly.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+/**
+ * Generates an Instagram caption and hashtags using the fast gemini-2.5-flash-lite model.
+ */
 export const generateCaption = async (data: CaptionRequest): Promise<CaptionResponse> => {
   const langNames = {
     [Language.UZ]: "O'zbekcha",
@@ -23,7 +27,7 @@ export const generateCaption = async (data: CaptionRequest): Promise<CaptionResp
     Requirements:
     1. The output MUST be in ${langNames[data.language]}.
     2. Use emojis relevant to the style.
-    3. Include 15-20 hashtags: mix local (if applicable) and trending global ones.
+    3. Include 15-20 hashtags: mix local and trending global ones.
     4. Focus on high engagement and aesthetic appeal.
     5. Mention the color ${data.color} creatively.
     6. Incorporate the call to action: "${data.actionCall || ""}".
@@ -31,7 +35,7 @@ export const generateCaption = async (data: CaptionRequest): Promise<CaptionResp
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
+      model: "gemini-2.5-flash-lite-latest", // Upgraded to flash-lite for faster response times
       contents: prompt,
       config: {
         responseMimeType: "application/json",
